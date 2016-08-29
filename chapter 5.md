@@ -11,7 +11,7 @@
     }
   }
 ```
-  这条语句将在JS文件被加载时立刻执行，但是如果JS文件是从HTML文档的<head>部分用<script>标签调用的，它将在HTML文档之前加载到浏览器。而此时并没有完整的DOM，所以getElementsByTagName就不能干活。解决的方法是通过onload事件来确定文档是否加载完成：
+  这条语句将在JS文件被加载时立刻执行，但是如果JS文件是从HTML文档的head部分用script标签调用的，它将在HTML文档之前加载到浏览器。而此时并没有完整的DOM，所以getElementsByTagName就不能干活。解决的方法是通过onload事件来确定文档是否加载完成：
 ```javascript
   window.onload = prepareLinks;
   function prepareLinks(){
