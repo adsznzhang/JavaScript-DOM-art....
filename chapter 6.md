@@ -103,4 +103,78 @@
 
 引入上面几个检测后的代码如下：
 ```javascript
+  function showPic(whichpic){
+    if(!document.getElementById("placeholder")) return false;
+    var source = whichpic.getAttribute("href");
+    var placeholder = document.getElementById("placeholder");
+    if(placeholder.nodeName != "IMG") return false;
+    placeholder.steAttribute("src", source);
+    if(document.getElementById("description")){
+      var text = whichpic.getAtrribute("title") ? whichpic.getAtrribute("title") : "";
+      var description = document.getElementById("description");
+      if(description.firstChild.nodeType == 3){
+        description.firstChild.nodeValue = text;
+      }
+    }
+    return true;
+  }
+```
+## 6.6 键盘访问
+  可以把下面代码改为使用三元运算符：
+```javascript
+  links[i].onclick = function(){
+    return showPic(this) ? false : true;  
+  }
+  
+  links[i].onclick = function(){
+    return showPic(this) ? false : true;
+  }
+```
+如果想让onkeypress事件与onclick事件触发同样的行为，可以简单的把有关指令复制一份：
+```javascript
+  links[i].onclick = function(){
+    return showPic(this) ? false : true;
+  }
+  links[i].onkeypress = function(){
+    return showPic(this) ? false : true;
+  }
+  //或者直接赋值给onkeypress,像下面一样
+  links[i].onclick = function(){
+    return shoPic(this) ? false : true;  
+  }
+  links[i].onkeypress = links[i].onclick;
+```
+  
+  **这就是JS和HTML分离带来的方便，如果你已经把所有的函数和事件处理函数都放在了外部文件里，就可以只在必要时修改JS代码，而根本不用动HTML文件**
+  小心 onekypress事件，用户每按下一个案件都会触发它。onclick事件在几乎所有的浏览器里，用TAB移动到某个链接然后按下回车键的动作也会触发onclick事件！下面是完整的prepareGallery()和showPic()函数：
+```javascript
+  function prepareGallery() {
+    if(!document.getElementsByTagName) return false;
+    if(!document.getElementById) return false;
+    if(!document.getElementById("imagegallery")) return false;
+    var gallery = document.getElementById("imagegallery");
+    var links = document.getElementsByTagName("a");
+    for(var i = 0; i < links.length; i++){
+      links[i].onclick = function(){
+        return showPic(this) ? false : true;
+      }
+    }
+  }
+  
+  function showPic(whichpic){
+    if(!document.getElementById("placeholder")) return false;
+    var source = whichpic.getAttribute("href");
+    var placeholder = document.getElementById("placeholder");
+    if(placeholder.nodeName != "IMG") return false;
+    placeholder.setAttribute("src", source);
+    if(document.getElementById("description")){
+      var text = whichpic.getAttribute("title") ? whichpic.getAttribute("title") : "";
+      var descritpion = document.getElementById("descritpion");
+      if(descritpion.firstChild.nodeType == 3){
+        descritpion.firstChild.nodeValue = text;
+      }
+    }
+    return true;
+  }
+```
   
