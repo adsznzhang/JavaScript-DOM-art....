@@ -118,6 +118,170 @@ innerHTML属性不会返回任何对刚插入内容的引用。如果想对刚�
 整个代码如下：
 ```javascript
   window.onload = function(){
-    var para = document.
+    var para = document.createElement("p");
+    var txt1 = document.createTextNode("This is ");
+    para.appendChild(txt1);
+    var emphasis = document.createElment("em");
+    var txt2 = document.createTextNode("my");
+    emphasis.appendChild(txt2);
+    para.appendChild(emphasis);
+    var txt3 = document.createTextNode(" content.");
+    para.appendChild(txt3);
+    var testdiv = document.getElementById("testdiv");
+    testdiv.appendChild(para);
   }
+```
+## 7.3用DOM重写图片库
+  DOM实现步骤如下：
+- 创建一个img元素节点
+- 设置这个节点的id属性
+- 设置src属性
+- 设置这个节点alt属性
+- 创建一个p元素节点
+- 设置这个节点的id属性
+- 创建一个文本节点
+- 把这个文本节点追加到p元素上
+- 把p元素和img元素插入到gallery.html文档
+
+```javascript
+  var placeholder = docuemnt.createElement("img");
+  placeholder.setAttribute("id", "placeholder");
+  placeholder.setAttribute("src","images/placeholder.gif");
+  placeholder.setAttribute("alt", "my image agllery");
+  var descritpion = document.createElement("p");
+  description.setAttribute("id", "description");
+  var desctext = document.creatTextNode("Choose an imgage");
+  description.appendChild(desctext);
+  //最后一步是把新建的元素插入文档，凑巧的是图片清单ul是文档的最后一个元素所以如果把placeholder和description加入body元素上
+  //他们就会出现在清单的后面
+  document.getElementsByTagName("body")[0].appendChild(placeholder);
+  document.getElementsByTagName("body")[0].appendChild(description);
+  
+```
+### 7.3.1在已有元素前插入一个新元素
+  DOM提供了一个名为insertBefore()方法！你必须告诉他三个秘密：
+- 新元素： 你想插入的元素
+- 目标元素： 你想把这个新元素插入到哪个元素
+- 父元素： 目标元素的父元素
+
+
+
+比如下面的代码可以把placeholder和description插入到清单的:
+```javascript
+  var gallery = document.getElementById("imagegallery");
+  gallery.parentNode.insertBefore(placeholder, gallery);
+  //gallery的parentNode属性值是body元素，所以placeholder元素将被插入为body元素的新子元素，它被插入到兄弟元素gallery的前面
+  gallery.parentNode.insertBefore(description, gallery);
+```
+### 7.3.2 在现有元素后插入
+  DOM本身没有insertAfter所以创建的函数代码如下：
+```javascript
+  function insertAfter(newElement, targetElement) {
+    var parent = targetElement.parentNode;
+    if(parent.lastChild == targetElement) {
+      parent.appendChild(newElement);  
+    }
+    else {
+      parent.insertBefore(newElement, targetElement.nextSibling);
+    }
+  }
+```
+  使用insertAfter函数把placeholder插入到gallery后面，再把description插入到placeholder后面，当然要先判断新的DOM方法是否可用
+```javascript
+  function preparePlaceholder(){
+    if(!document.createElement) return false;
+    
+  }
+```
+### 图片库的二次改进版
+现在showPic.js文件包含5个不同的函数，他们是：
+- addLoadEvent 函数
+- insertAfter 函数
+- preparePlaceholder
+- prepareGallery
+- showPic
+
+
+
+
+**addLoadEvent和insertAfter属于通用型函数，他们在许多场合都能派上用场** 通过addLoadEvent函数来调用preparePlaceholder和prepareGallery函数
+整个代码如下：
+```javascript
+  
+```
+
+## 7.4 Ajax
+**Ajax的主要优势是对页面的请求以异步方式发送到服务器。而服务器不会用整个页面来响应请求，它会在后台处理请求，同时用户还能继续浏览页面与页面交互。你的脚步则可以按需加载和创建页面内容，而不会打断用户的浏览体验。**
+### 7.4.1 XMLHttpRequest对象
+**Ajax的核心是XMLHttpRequest对象!**
+下面来个例子！
+```javascript
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="utf-8">
+    <title>Ajax</title>
+  </head>
+  <body>
+  
+    <div id="new"></div>
+    
+    <script src="scripts/addLoadEvent.js"></script>
+    <script src="scripts/getHTTPObject.js"></script>
+    <script src="scripts/getNewContent.js"></script>
+  </body>
+  </html>
+```
+为了模拟服务器的响应，在ajax.html文件旁边创建一个example.txt文件内容为：This was loaded asynchronously!
+微软最早在IE5中以ActiveX对象的形式实现了一个名叫XMLHTTP的对象。在IE中创建新的对象需要下列代码：
+```javascript
+  var request = new ActiveXObject("Msxml2.XMLHTTP.3.0");
+  //其他浏览器则基于XMLHtttpRequest来创建
+  var request = new XMLHttpRequest();
+  //为了兼容所有浏览器getHTTPObject.js文件中的getHTTPObject函数要这样来写：
+  function getHTTPObject(){
+    if(typeof XMLHttpRequest == "undefined")
+      XMLHttpRequest = function(){
+        try {return new ActiveXObject("Msxml2.XMLHTTP.6.0");}
+          catch(e){}
+        try {return new ActiveXObject("Msxml2.XMLHTTP.3.0");}
+          catch(e){}
+        try {return new ActiveXObject("Msxml2.XMLHTTP");}
+          catch(e){}
+        return false;
+      }
+      return new XMLHttpRequest();
+  }
+  
+  //这样在脚本中使用XMLHttpRequest对象时，可以将这个新对象直接赋值给一个变量如下
+  var request = getHTTPObject();
+  
+  
+```
+
+在getNewContent.js文件中添加下面的代码：
+```javascript
+  function getNewContent(){
+    var request = getHTTPObject();
+    if(request){
+      request.open("GET","example.txt", true);
+      //XMLHttpRequest对象有许多方法，其中最有用的是OPEN
+      request.onreadystatechange = function(){
+        if(request.readyState == 4){
+          var para = document.createElement("p");
+          var txt = document.createTextNode(request.responseText);
+          para.appendChild(txt);
+          document.getElemntById("new").appendChidl(para);
+        }
+      };
+      request.send(null);
+    }
+    else {
+      alert("Sorry, your browser doesn\'t support XMLHttpRequest");
+    }
+  }
+  addLoadEvent(getNewContent);
+```
+  
+
 
