@@ -118,3 +118,98 @@ function displayAbbreviations(){
   document.body.appendChild(dlist);
 }
 ```
+检查兼容性：
+```javascript
+if(!document.geElementsByTagName) return false;
+if(!document.createElement) return false;
+if(!document.createTextNode) return false;
+//把上面合并为一句
+if(!document.getElementsByTagName || !document.createElement || !document.createTextNode) return false;
+//这个函数应该在页面加载时调用可以通过window.onload来实现
+function addLoadEvent(func) {
+  var oldonload = window.onload;
+  if(typeof window.onload != "function"){
+    window.onload = func;
+  }
+  else{
+    window.onload = function(){
+      oldonload();
+      func();
+    }
+  }
+}
+```
+### 8.4.3 万恶的IE浏览器
+displayAbbreviations 在IE6或更早的版本可能会出错并无法显示“缩略语列表” 因为直到IE7才支持abbr元素。。。解决的办法是：从abbr元素提取title属性值和文本值得for循环里添加一条语句：
+```javascript
+for(var i = 0; i < abbreviations.length; i++){
+  var current_abbr = abbreviations[i];
+  if(current_abbr.childNodes.length < 1) continue;
+  var definition = current_abbr.getAttribute("title");
+  var key = current_abbr.lastChild.nodeValue;
+  def[key] = definition;
+}
+```
+因为IE浏览器在统计abbr元素的子节点个数时总会返回一个错误的值零，所以这条新语句就会让IE浏览器不再继续执行循环中的后续代码，因为defs数组是空的，所以它将不会创建任何dt和dd，还需要在for循环后面添加一条语句：如果缩略语dl元素没有任何子节点，则立刻退出！
+
+```javascript
+if(dlist.childNodes.length < 1) return false;
+```
+
+## 8.5 显示文献来源链接表
+请看explanation.html文档中下面的标记：
+```
+<blockquote cite="http://www.w3.org/DOM/">
+  <p>balabal</p>
+</blockquote
+```
+浏览器会忽略blaockquote中的cite属性，可以通过JS和DOM来显示他们步骤如下：
+- 遍历这个文档所有blockquote元素
+- 从blockquote元素提取cite属性的值
+- 创建一个标识文本是source的链接
+- 把这个链接赋值为blocquote元素的cite属性值
+- 把这个链接插入到文献节选的末尾
+
+
+
+
+编写displayCiteations函数
+```javascript
+//找出所有blockquote元素，并用一个简单的测试检查本次循环中当前文献节选有没有这个属性
+function displayCitations(){
+  var quotes = document.getElementsByTagName("blockquote");
+  for(var i = 0; i < quotes.length; i++){
+    if(!quotes[i].getAttribute("cite")){
+      continue;
+    }
+    var url quote[i].getAttribute("cite");
+  }
+}
+```
+我们想把文献来源链接放在blockquote元素的最后一个子元素节点之后，显然我们应该先找当前blockquote元素的lastChild属性！可是我们会遇到一个问题blockquote元素的最后一个子节点应该是p元素可以在他们之间还有一个换行符如下：
+```</p>
+</blockquote>
+```
+有些浏览器会把这个换行符解释为一个文本节点，所以我们要另寻方法，可以把blockquote元素里的所有元素节点找出来，如果用通配符“*”作为参数传递给getElementsByTagName，它就会返回所有元素！然后再用数组长度减一就是最后一个元素啦！！如下：
+```javascript
+var quoteElements = quotes[i].getElementsByTagName("*");
+var elem = quoteElements[quoteElments.length - 1];
+//与其假设quoteElements返回一个元素节点数组不如增加一项测试来检查它的长度是否小于1
+if(quoteElements.length < 1) continue;
+```
+创建链接
+```javascript
+ var link = document.createElement("a");
+ var link_text = document.creatTextNode("sorce");
+ link.appendChild(link_text);
+ link.setAttribute("href", url);
+```
+插入链接
+```javascript
+var superscript = document.createElement("sup");
+superscript.appendChild(link);
+//elem对应blockquote元素最后一个元素节点
+elem.appendChild(superscript);
+```
+下面是完整的displayCitations函数：
+```javascript
