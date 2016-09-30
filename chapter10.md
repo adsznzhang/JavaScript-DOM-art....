@@ -84,3 +84,44 @@ A web site includes several links. When "onmouseover" it should show some pictur
 </body>
 </html>
 ```
+### 10.2.2 解决问题
+- 为所有预览图片生成一张“集体照”形式的图片
+- 隐藏绝大部分
+- 当用户鼠标指针悬停在某个链接上时，只显示这张集体照图片的相应部分
+
+
+
+```javascript
+//把图片插入到list.html文档中
+<img src="images/topics.gif" alt="building blocks of web design" id="preview" />
+```
+### 10.2.3 CSS
+overflow属性用来处理一个元素的尺寸超出其容器尺寸的情况，可以取值4中：visible , hidden, scroll和auto
+- visible:不裁剪溢出的内容，溢出内容会出现在其容器显示区域以外，全部内容可见！
+- hidden: 隐藏溢出的内容，内容只显示在其容器元素的显示区域里
+- scroll:类似与hidden,但显示一个滚动条可以滚动看到内容的其他部分
+- auto:类似与scroll,但浏览器只在确实发生溢出的时候才显示滚动条！
+
+
+
+首先把图片放到一个容器里，这里我们用DIV元素
+```javascript
+<div id="slideshow">
+    <img src="images/topics.gif" alt="building blocks of web design" id="preview" />
+ </div>
+ 
+ //创建一个样式表layout.css放入styles文件夹
+ #slideshow {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+ }
+ //把position设置为relative很重要，因为要让子图片使用绝对位置来定位！
+ 
+ //把样式表引入list.html
+ <link rel="stylesheet" href="styles/layout.css" media="screen" />
+ ```
+ ### 10.2.4 Javascript部分
+ 
+ 
