@@ -123,5 +123,39 @@ overflow属性用来处理一个元素的尺寸超出其容器尺寸的情况，
  <link rel="stylesheet" href="styles/layout.css" media="screen" />
  ```
  ### 10.2.4 Javascript部分
- 
+ 使用moveElement函数来移动topics.gif图片。根据用户悬停在哪个链接上，将图片向左或者向右移动。
+ ```javascript
+ function prepareSlideshow() {
+    //确保浏览器支持DOM方法
+    if(!document.getElmentsByTagName) return false;
+    if(!document.getElmentById) return false;
+    //确保元素存在
+    if(!document.getElmentById("linklist")) return false;
+    if(!document.getElmentById("preview")) return flase;
+    //为图片应用样式
+    var preview = document.getElementById("preview");
+    preview.style.position = "absolute";
+    preview.style.left = opx";
+    preview.style.top = "opx";
+    //取得列表中的所有链接
+    var list = document.getElmentById("linklist");
+    var links = list.getElmentsByTagName("a");
+    //为mouseover事件添加动画效果
+    links[0].onmouseover = function(){
+        moveElement("preview", -100,0,10);
+    }
+    links[1].onmouseover = function(){
+        moveElement("preview", -200,0,10);
+    }
+    lins[2].onmouseover = function() {
+        moveElement("preview", -300,0,10);
+    }
+    }
+   ```
+   不过上面的函数执行时：如果鼠标指针在链接间快速来回移动，动画效果将变得混乱起来。moveElement函数有写小bug
+   
+   ### 10.2.5 变量作用域问题
+   每当用户把鼠标指针悬停在某个链接上，不管上一次调用是否已经把图片移动到位，moveElement函数都会被再次调用并试图把这个图片移动到另一个地方去！
+   如果用户鼠标移动速度够快，积累在setTimeout队列里的事件就会导致动画产生滞后。为了消除滞后可以使用clearTimeout函数清楚积累在setTimeout队列里的事件！
+
  
