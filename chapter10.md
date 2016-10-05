@@ -158,4 +158,25 @@ overflow属性用来处理一个元素的尺寸超出其容器尺寸的情况，
    每当用户把鼠标指针悬停在某个链接上，不管上一次调用是否已经把图片移动到位，moveElement函数都会被再次调用并试图把这个图片移动到另一个地方去！
    如果用户鼠标移动速度够快，积累在setTimeout队列里的事件就会导致动画产生滞后。为了消除滞后可以使用clearTimeout函数清楚积累在setTimeout队列里的事件！
 
+    可是如果在还没有设置movement变量之前就执行这条语句，我们会收获一个错误，我不能使用局部变量：var movement = setTimeout(repeat,interval);
+    如果这样做，clearTimeout函数调用语句将无法工作，因为局部变量movement在clearTimeout函数的上下文不存在。解决的方法时为元素创建属性
+```javascript
+if(elem.movement){
+    clearTimeout(elem.movement);
+}
+elem.movement = setTimeout(repeat,interval);
+```
+
+### 10.2.6 改进动画
+
+moveElement函数每次只移动一个像素的距离。移动效果平滑但速度有些慢！下面时让元素每次前进总距离的十分之一.
+```javascript
+dist =(final_x - xpos)/10;
+xpos = xpos + dist;
+//使用Math对象的ceil方法可以返回不小于dist值的一个整数
+if(xpox < final_x){
+    dist = Math.ceil((final_x - xpos)/10);
+    xpos = xpos + dist;
+}
+```
  
