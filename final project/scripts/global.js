@@ -114,7 +114,8 @@ function prepareSlideshow(){
   preview.setAttribute("id","preview");
   slideshow.appendChild(preview);
   insertAfter(slideshow,intro);
-  //接着循环遍历INTRO段落中所有的链接，并根据当前鼠标所在的链接来移动preview元素，比如链接包含about.html，就把preview元素移动到-150px上
+ //接着循环遍历INTRO段落中所有的链接，并根据当前鼠标所在的链接来移动preview元素，比如链接包含about.html，就把preview元素移动到-150px上
+ //如果想让导航栏中的链接出现幻灯片，可用var links = document.getElementsByTagName("a");代替下面的代码
   var links = intro.getElementsByTagName("a");
   var destination;
   for(var i = 0; i<links.length;i++) {
