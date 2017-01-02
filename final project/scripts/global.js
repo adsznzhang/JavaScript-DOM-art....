@@ -102,6 +102,11 @@ function prepareSlideshow(){
   if(!document.getElementById("intro")) return false;
   var intro = document.getElementById("intro");
   var slideshow = document.creatElement("div");
+  var frame = document.creatElement("img");
+  frame.setAttribute("src","images/frame.gif");
+  frame.setAttribute("alt","");
+  frame.setAttribute("id","frame");
+  slideshow.appendChild(frame);
   slideshow.setAttribute("id","slideshow");
   var preview = document.creatElement("img");
   preview.setAttribute("src","images/slideshow.gif");
