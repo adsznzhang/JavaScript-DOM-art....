@@ -141,3 +141,37 @@ function prepareSlideshow(){
 }
 addLoadEvent(prepareSlideshow);
 
+//使用JS和DOM选择性的每次只显示一个部分SECTION，下面的函数可用根据指定的ID显示相应的SECTION，同时隐藏其他部分
+function showSection(id){
+  var sections = document.getElementsByTagName("section");
+  for(var i = 0; i<sections.length;i++){
+    if(sections[i].getAttribute("id") != id){
+        sections[i].style.display = "none";
+       }
+    else {
+      sections[i].style.display = "block";
+    }
+  }
+}
+//在ARTICLE 中的NAV所包含的链接被单击时调用showSection 函数
+function prepareInternalnav(){
+  if(!document.getElementsByTagName) return false;
+  if(!document.getElementById) return false;
+  var articles = document.getElementsByTagName("article");
+  if(articles.length == 0) return false;
+  var navs = articles[0].getElementsByTagName("nav");
+  if (navs.length == 0) return false;
+  var nav = navs[0]
+  var links = nav.getElementsByTagName("a");
+  for(var i=0; i<links[i].length;i++){
+    var sectionId = links[i].getAttribute("href").split("#")[1];
+    if(!document.getElementById(sectionId)) continue;
+    document.getElementById(sectionId).style.display = "none";
+    links[i].destination = sectionId;
+    links[i].onclick = function(){
+      showSection(this.destination);
+      return false;
+    }
+  }
+}
+addLoadEvent(prepareInternalnav);
