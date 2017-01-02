@@ -12,7 +12,7 @@ function addLoadEvent(func){
 }
 
 //insertAfter 也很有用
-function inserAfter(newElement, targetElement) {
+function insertAfter(newElement, targetElement) {
   var parent = targetElement.parentNode;
   if(parent.lastChild == targetElement) {
     parent.appendChild(newElement);
@@ -91,5 +91,47 @@ function moveElement(elementID, final_x,final_y,interval){
   }
   elem.style.left = xpos + "px";
   elem.style.top = ypos +"px";
-  var repeat = "moveElement()"
+  var repeat = "moveElement('"+elementID+"',"+final_x+","+final_y+","+interval+")";
+  elem.movement = setTimeout(repeat, interval);
 }
+
+//创建幻灯片并放在文档中INTRO 段落的后面
+function prepareSlideshow(){
+  if(!document.getElementsByTagName) return false;
+  if(!document.getElementById) return false;
+  if(!document.getElementById("intro")) return false;
+  var intro = document.getElementById("intro");
+  var slideshow = document.creatElement("div");
+  slideshow.setAttribute("id","slideshow");
+  var preview = document.creatElement("img");
+  preview.setAttribute("src","images/slideshow.gif");
+  preview.setAttribute("alt","a glimpe of what awaits you");
+  preview.setAttribute("id","preview");
+  slideshow.appendChild(preview);
+  insertAfter(slideshow,intro);
+  //接着循环遍历INTRO段落中所有的链接，并根据当前鼠标所在的链接来移动preview元素，比如链接包含about.html，就把preview元素移动到-150px上
+  var links = intro.getElementsByTagName("a");
+  var destination;
+  for(var i = 0; i<links.length;i++) {
+    links[i].onmouseover = function(){
+      destination = this.getAttribute("href");
+      if(destination.indexOf("index.html") != -1){
+        moveElement("preview",0,0,5);
+      }
+      if(destination.indexOf("about.html") != -1){
+        moveElement("preview",-150,0,5);
+      }
+      if(destination.indexOf("photos.html") != -1){
+        moveElement("preview", -300,0,5);
+      }
+      if(destination.indexOf("live.html") != -1){
+        moveElement("preview",-450,0,5);
+      }
+      if(destination.indexOf("contact.html") != -1){
+        moveElement("preview", -600,0,5);
+      }
+    } 
+  }
+}
+addLoadEvent(prepareSlideshow);
+
