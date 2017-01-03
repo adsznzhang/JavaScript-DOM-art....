@@ -227,3 +227,40 @@ function prepareGallery() {
 }
 addLoadEvent(preparePlaceholder);
 addLoadEvent(prepareGallery);
+
+//增强表格的函数
+function stripeTables(){
+  if(!document.getElementsByTagName) return false;
+  var tables = document.getElementsByTagName("table");
+  for(var i = 0;i<tables.length;i++){
+    var odd = false;
+    var rows = tables[i].getElementsByTagName("tr");
+    for(var j = 0;j<rows.length;j++){
+      if(odd == true){
+ //这样判断奇数偶数吗
+        addClass(rows[j],"odd");
+        odd = false;
+      }
+      else{
+        odd = true;
+      }
+    }
+  }
+}
+function highlightRows(){
+  if(!document.getElementsByTagName) return false;
+  var rows = document.getElmentsByTagName("tr");
+  for(var i = 0; i<rows.length; i++){
+    rows[i].oldClassName = rows[i].className
+    rows[i].onmouseover = function(){
+      addClass(this,"highlight");
+    }
+    row[i].onmouseout = function(){
+      this.className = this.oldClassName
+    }   
+  }
+}
+
+function displayAbbreviations(){
+  if(!document.getElementsByTagNmae || !document.)
+}
