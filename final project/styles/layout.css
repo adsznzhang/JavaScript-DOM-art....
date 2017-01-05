@@ -33,7 +33,7 @@ header nav {
   border-style:solid;
   border-bottom-width:0;
   border-top-width:0;
-  padding-left:10%;    
+  padding-left:10%;
 }
 header nav ul{
   width:100%;
@@ -107,4 +107,10 @@ dt {
 }
 dd{
   float: left;
+}
+label {
+  display:block;
+}
+fieldset{
+  border:0;
 }

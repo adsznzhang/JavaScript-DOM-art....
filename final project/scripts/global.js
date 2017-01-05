@@ -136,7 +136,7 @@ function prepareSlideshow(){
       if(destination.indexOf("contact.html") != -1){
         moveElement("preview", -600,0,5);
       }
-    } 
+    }
   }
 }
 addLoadEvent(prepareSlideshow);
@@ -212,7 +212,7 @@ function preparePlaceholder(){
   var gallery = document.getElementById("imagegallery");
   insertAfter(description, gallery);
   insertAfter(placeholder, description);
-} 
+}
 function prepareGallery() {
   if(!document.getElementsByTagName) return false;
   if(!document.getElementById) return false;
@@ -257,7 +257,7 @@ function highlightRows(){
     }
     row[i].onmouseout = function(){
       this.className = this.oldClassName
-    }   
+    }
   }
 }
 
@@ -299,3 +299,42 @@ function displayAbbreviations(){
 addLoadEvent(stripeTables);
 addLoadEvent(highlightRows);
 addLoadEvent(displayAbbreviations);
+
+//if lable onclick then focus ocur...
+function focusLabels(){
+  if(!document.getElementsBytagName) return false;
+  var labels = document.getElementsByTagName("label");
+  for (var i = 0; i< labels.length;i++){
+    if(!labels[i].getAttribute("for"))continue;
+    labels[i].onclick = function(){
+      var id = this.getAttribute("for");
+      if(!document.getElementById(id)) return false;
+      var elment = document.getElementById(id);
+      element.focus();
+    }
+  }
+}
+addLoadEvent(focusLabels);
+function resetFields(whichform){
+  if(Modernizr.input.placeholder) return;
+  for(var i=0; i<whichform.elements.length;i++){
+    var element  whichform.elements[i];
+    if(element.type == "submit") continue;
+    var check = element.placeholder || element.getAttribute("placeholder");
+    if(!check) continue;
+    element.onfocus = function(){
+      var text = this.placeholder || this.getAttribute("placeholder") ;
+      if(this.value == text){
+        this.className = "";
+        this.value ="";
+      }
+    }
+    element.onblur  function(){
+      if(this.value == " "){
+        this.className = "placeholder";
+        this.value = this.placeholder || this.getAttribute("placeholder");
+      }
+    }
+    element.onblur();
+  }
+}
