@@ -286,4 +286,16 @@ function displayAbbreviations(){
     dlist.appendChild(ddesc);
   }
   if(dlist.childNodes.length < 1) return false;
+  var header = document.createElement("h3");
+  var header_text = document.createTextNode("Abbreviations")
+  header.appendChild(header_text);
+  var articales = document.getElementsByTagName("article");
+  if(articales.length == 0) return false;
+  var container = articles[0];
+  container.appendChild(header);
+  container.appendChild(dlist);
 }
+
+addLoadEvent(stripeTables);
+addLoadEvent(highlightRows);
+addLoadEvent(displayAbbreviations);
